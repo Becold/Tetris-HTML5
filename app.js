@@ -15,14 +15,14 @@
 	/*
 	 * Constantes
 	 */
-	var STATE = {
+	const STATE = {
 		INIT: 0,
 		PLAY: 1,
 		PAUSE: 2,
 		GAMEOVER: 3,
 	}
 	
-	var COLORS = {
+	const COLORS = {
 		EMPTY: -1,
 		GRAYLIGHT: "#adb5bd",
 		GRAY: "#343a40",
@@ -40,7 +40,7 @@
 		ORANGE: "#e8590c",
 	}
 	
-	var TYPE = {
+	const TYPE = {
 		
 		// @TODO Définir les constantes pour chaque types de pièces
 		
