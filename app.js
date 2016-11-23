@@ -18,6 +18,20 @@
      */
     function rand(min, max) { return (Math.random() * (max - min) + min); }
 
+    Object.prototype.clone = function() {
+        var newObj = (this instanceof Array) ? [] : {};
+        for (i in this) {
+            if (i == 'clone')
+                continue;
+            if (this[i] && typeof this[i] == "object") {
+                newObj[i] = this[i].clone();
+            }
+            else
+                newObj[i] = this[i]
+        }
+        return newObj;
+    };
+
     /*
      * Constantes
      */
@@ -145,12 +159,12 @@
      * Quand le bag est rempli, on le rempli avec les 7 pièces.
      */
     var bag = {
-        currentBag: null,
+        currentBag: [],
         getRandomPiece: function() {
 
             // Si le bag est vide, on le remplit
-            if (this.currentBag == null)
-                this.currentBag = BAG;
+            if (this.currentBag.length == 0)
+                this.currentBag = BAG.clone();
 
             // On enlève une pièce du bag et on le return
             return this.currentBag.splice(rand(0, this.currentBag.length-1), 1)[0];
