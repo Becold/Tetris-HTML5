@@ -35,6 +35,14 @@
     /*
      * Constantes
      */
+    const KEY = {
+        SPACE: 32,
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40
+    }
+
     const STATE = {
         INIT: 0,
         PLAY: 1,
@@ -282,19 +290,19 @@
 
         // @TODO Game controller
         switch (event.keyCode) {
-            case 37: // gauche
+            case KEY.LEFT:
 
                 break;
-            case 39: // droite
+            case KEY.RIGHT:
 
                 break;
-            case 38: // haut
+            case KEY.UP:
 
                 break;
-            case 40: // bas
+            case KEY.DOWN:
 
                 break;
-            case 32: // espace
+            case KEY.SPACE:
 
                 break;
             default:
