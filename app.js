@@ -10,7 +10,13 @@
         function(callback) {
             window.setTimeout(callback, 1000 / 60);
         };
+    ;
 
+
+    /*
+     * Helpers
+     */
+    function rand(min, max) { return (Math.random() * (max - min) + min); }
 
     /*
      * Constantes
@@ -40,14 +46,71 @@
         ORANGE: "#e8590c"
     }
 
-    const TETRIBAG = [
-    ]
-
     const BACKGROUND_COLOR = COLORS.GRAYLIGHT; // Couleur de fond
     const TILES_X = 10; // Nombre de tiles horizontaux
     const TILES_Y = 16; // Nombre de tiles verticaux
     const TILE_SIZE = 8; // Largeur d'une tile
     // @TODO Rajouter une bordure autour de chaque tile
+
+    const PIECES = {
+        i: {
+            color: COLORS.CYAN,
+            blocks: [
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 0]
+            ]
+        },
+        j: {
+            color: COLORS.BLUE,
+            blocks: [
+                [0, 0, 0],
+                [1, 1, 1],
+                [0, 0, 1]
+            ]
+        },
+        l: {
+            color: COLORS.ORANGE,
+            blocks: [
+                [0, 0, 0],
+                [1, 1, 1],
+                [0, 0, 1]
+            ]
+        },
+        o: {
+            color: COLORS.YELLOW,
+            blocks: [
+                [1, 1],
+                [1, 1]
+            ]
+        },
+        s: {
+            color: COLORS.GREEN,
+            blocks: [
+                [0, 0, 0],
+                [0, 1, 1],
+                [1, 1, 0]
+            ]
+        },
+        z: {
+            color: COLORS.RED,
+            blocks: [
+                [0, 0, 0],
+                [1, 1, 0],
+                [0, 1, 1]
+            ]
+        },
+        t: {
+            color: COLORS.PURPLE,
+            blocks: [
+                [0, 0, 0],
+                [1, 1, 1],
+                [0, 1, 0]
+            ]
+        }
+    };
+    const BAG = [PIECES.i, PIECES.j, PIECES.l, PIECES.o, PIECES.s, PIECES.t, PIECES.z];
 
 
     /*
@@ -73,7 +136,32 @@
             offsetY: null,
             offsetY: null
         }
-    }
+    };
+
+
+    /*
+     * Sac qui contient les 7 pièces
+     * Chaque fois que le game core a besoin d'une pièce, on le retire du bag.
+     * Quand le bag est rempli, on le rempli avec les 7 pièces.
+     */
+    var bag = {
+        currentBag: null,
+        getRandomPiece: function() {
+
+            // Si le bag est vide, on le remplit
+            if (this.currentBag == null)
+                this.currentBag = BAG;
+
+            // On enlève une pièce du bag et on le return
+            return this.currentBag.splice(rand(0, this.currentBag.length-1), 1)[0];
+
+        },
+        rotatePiece: function(piece, direction) {
+
+            // @TODO Algorythme pour tourner une pièce
+
+        }
+    };
 
 
     /*
@@ -166,6 +254,7 @@
         rotateCurrentPiece: function() {
 
             // @TODO Algorythme pour tourner la pièce en cours
+            // (gérer les collisions et les kicks contre les bord du board)
 
         }
     };
