@@ -80,10 +80,10 @@
     const BACKGROUND_COLOR = COLORS.GRAYLIGHT;
 
     // Number of horizontal tiles
-    const TILES_X = 10;
+    const COLUMNS = 10;
 
     // Number of vertical tiles
-    const TILES_Y = 16;
+    const ROWS = 16;
 
     // Size of tiles width (px)
     const TILE_SIZE = 8;
@@ -237,17 +237,17 @@
             this.state = STATE.INIT;
 
             // Set the width and the hight of canvas
-            canvas.width = TILES_X * TILE_SIZE;
-            canvas.height = TILES_Y * TILE_SIZE;
+            canvas.width = COLUMNS * TILE_SIZE;
+            canvas.height = ROWS * TILE_SIZE;
             preview.width  = 32;
             preview.height = 32;
 
             // Generate the boardgame
             _.board = [];
-            for (var i = 0; i < TILES_X; i++)
+            for (var i = 0; i < COLUMNS; i++)
             {
                 _.board[i] = [];
-                for (var j = 0; j < TILES_Y; j++)
+                for (var j = 0; j < ROWS; j++)
                 {
                     _.board[i][j] = COLORS.EMPTY;
                 }
@@ -292,7 +292,7 @@
         drawBackground: function() {
 
             tet.fillStyle = BACKGROUND_COLOR;
-            tet.fillRect(0, 0, TILES_X*TILE_SIZE, TILES_Y*TILE_SIZE);
+            tet.fillRect(0, 0, COLUMNS*TILE_SIZE, ROWS*TILE_SIZE);
 
             pvw.fillStyle = BACKGROUND_COLOR;
             pvw.fillRect(0, 0, 32, 32);
@@ -302,9 +302,9 @@
         // Draw the tetriminos (on the board game)
         drawPieces: function() {
 
-            for (var i = 0; i < TILES_X; i++)
+            for (var i = 0; i < COLUMNS; i++)
             {
-                for (var j = 0; j < TILES_Y; j++)
+                for (var j = 0; j < ROWS; j++)
                 {
                     this.drawPiece(i, j, _.board[i][j]);
                 }
