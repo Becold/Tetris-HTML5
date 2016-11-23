@@ -19,7 +19,7 @@
         INIT: 0,
         PLAY: 1,
         PAUSE: 2,
-        GAMEOVER: 3,
+        GAMEOVER: 3
     }
 
     const COLORS = {
@@ -37,11 +37,17 @@
         GREEN: "#2f9e44",
         LIME: "#66a80f",
         YELLOW: "#f08c00",
-        ORANGE: "#e8590c",
+        ORANGE: "#e8590c"
     }
 
     const TETRIBAG = [
     ]
+
+    const BACKGROUND_COLOR = COLORS.GRAYLIGHT; // Couleur de fond
+    const TILES_X = 10; // Nombre de tiles horizontaux
+    const TILES_Y = 16; // Nombre de tiles verticaux
+    const TILE_SIZE = 8; // Largeur d'une tile
+    // @TODO Rajouter une bordure autour de chaque tile
 
 
     /*
@@ -54,13 +60,6 @@
     var pvw = preview.getContext("2d"); // Canvas qui contient la prochaine pièce
 
     var _ = {
-        backgroundColor: COLORS.GRAYLIGHT, // Couleur de fond
-
-        tilesX: 10, // Nombre de tiles horizontaux
-        tilesY: 16, // Nombre de tiles verticaux
-        tileSize: 8, // Largeur d'une tile
-        // @TODO Rajouter une bordure autour de chaque tile
-
         tick: 0, // Tick game
         speed: 250, // Vitesse de déplacement des pièces
 
@@ -87,17 +86,17 @@
             this.state = STATE.INIT;
 
             // Changement de la taille des canvas
-            canvas.width = _.tilesX * _.tileSize;
-            canvas.height = _.tilesY * _.tileSize;
+            canvas.width = TILES_X * TILE_SIZE;
+            canvas.height = TILES_Y * TILE_SIZE;
             preview.width  = 32;
             preview.height = 32;
 
             // Génération du terrain
             _.board = [];
-            for (var i = 0; i < _.tilesX; i++)
+            for (var i = 0; i < TILES_X; i++)
             {
                 _.board[i] = [];
-                for (var j = 0; j < _.tilesY; j++)
+                for (var j = 0; j < TILES_Y; j++)
                 {
                     _.board[i][j] = COLORS.EMPTY;
                 }
@@ -133,18 +132,18 @@
         },
         drawBackground: function() {
 
-            tet.fillStyle = _.backgroundColor;
-            tet.fillRect(0, 0, _.tilesX*_.tileSize, _.tilesY*_.tileSize);
+            tet.fillStyle = BACKGROUND_COLOR;
+            tet.fillRect(0, 0, TILES_X*TILE_SIZE, TILES_Y*TILE_SIZE);
 
-            pvw.fillStyle = _.backgroundColor;
+            pvw.fillStyle = BACKGROUND_COLOR;
             pvw.fillRect(0, 0, 32, 32);
 
         },
         drawPieces: function() {
 
-            for (var i = 0; i < _.tilesX; i++)
+            for (var i = 0; i < TILES_X; i++)
             {
-                for (var j = 0; j < _.tilesY; j++)
+                for (var j = 0; j < TILES_Y; j++)
                 {
                     this.drawPiece(i, j, _.board[i][j]);
                 }
@@ -153,10 +152,10 @@
         },
         drawPiece: function(x, y, color) {
 
-            if(color == COLORS.EMPTY) return; // Si color == 0, il n'y a pas de tetricube à cette endroit
+            if(color == COLORS.EMPTY) return;
 
             tet.fillStyle = color;
-            tet.fillRect(x*_.tileSize, y*_.tileSize, x*_.tileSize+_.tileSize, y*_.tileSize+_.tileSize);
+            tet.fillRect(x*TILE_SIZE, y*TILE_SIZE, x*TILE_SIZE+TILE_SIZE, y*TILE_SIZE+TILE_SIZE);
 
         },
         drawPreview: function() {
