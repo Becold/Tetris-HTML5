@@ -2,6 +2,7 @@
     /*
      * Polyfill
      */
+
     window.requestAnimationFrame =
         window.requestAnimationFrame ||
         window.mozRequestAnimationFrame ||
@@ -10,14 +11,16 @@
         function(callback) {
             window.setTimeout(callback, 1000 / 60);
         };
-    ;
 
 
     /*
      * Helpers
      */
+
+    // @return float Random number between min and max
     function rand(min, max) { return (Math.random() * (max - min) + min); }
 
+    // @return array/object Clone an array or an object
     Object.prototype.clone = function() {
         var newObj = (this instanceof Array) ? [] : {};
         for (i in this) {
@@ -32,9 +35,12 @@
         return newObj;
     };
 
+
     /*
-     * Constantes
+     * Constants
      */
+
+    // Keyboard key code
     const KEY = {
         SPACE: 32,
         LEFT: 37,
@@ -43,6 +49,7 @@
         DOWN: 40
     }
 
+    // Possible game state
     const STATE = {
         INIT: 0,
         PLAY: 1,
@@ -50,6 +57,7 @@
         GAMEOVER: 3
     }
 
+    // Blocks colors
     const COLORS = {
         EMPTY: -1,
         GRAYLIGHT: "#adb5bd",
@@ -68,12 +76,22 @@
         ORANGE: "#e8590c"
     }
 
-    const BACKGROUND_COLOR = COLORS.GRAYLIGHT; // Couleur de fond
-    const TILES_X = 10; // Nombre de tiles horizontaux
-    const TILES_Y = 16; // Nombre de tiles verticaux
-    const TILE_SIZE = 8; // Largeur d'une tile
-    // @TODO Rajouter une bordure autour de chaque tile
+    // Background color
+    const BACKGROUND_COLOR = COLORS.GRAYLIGHT;
 
+    // Number of horizontal tiles
+    const TILES_X = 10;
+
+    // Number of vertical tiles
+    const TILES_Y = 16;
+
+    // Size of tiles width (px)
+    const TILE_SIZE = 8;
+
+    // @TODO Add a Border on a tile (in px)
+    // const TILE_BORDER = 2;
+
+    // Tetriminos
     const PIECES = {
         i: {
             color: COLORS.CYAN,
@@ -132,27 +150,41 @@
             ]
         }
     };
+
+    // Filled bag (which contains all the tetriminos)
     const BAG = [PIECES.i, PIECES.j, PIECES.l, PIECES.o, PIECES.s, PIECES.t, PIECES.z];
 
 
     /*
-     * Global variables
+     * Globals variables
      */
+
     var canvas = document.getElementById("canvas");
     var preview = document.getElementById("preview");
 
-    var tet = canvas.getContext("2d"); // Canvas qui contient le plateau de jeu
-    var pvw = preview.getContext("2d"); // Canvas qui contient la prochaine pièce
+    var tet = canvas.getContext("2d"); // Board game
+    var pvw = preview.getContext("2d"); // Preview of the next tetriminos
 
     var _ = {
-        tick: 0, // Tick game
-        speed: 250, // Vitesse de déplacement des pièces
+        // Tick game
+        tick: 0,
 
-        score: 0, // Score du joueur
-        linesCleared: 0, // Nombre de ligne qui a été effacé par le joueur
+        // Movement speed of tetriminos
+        speed: 250,
 
+        // Player score
+        score: 0,
+
+        // Players's lines cleared
+        linesCleared: 0,
+
+        // Hold the requestAnimationFrame
         loopRequestAnim: null,
-        board: null, // Tableau 2d de la partie
+
+        // 2D array of the game board
+        board: null,
+
+        // Current tetriminos
         currentPiece: {
             type: null,
             offsetY: null,
@@ -162,25 +194,30 @@
 
 
     /*
-     * Sac qui contient les 7 pièces
-     * Chaque fois que le game core a besoin d'une pièce, on le retire du bag.
-     * Quand le bag est rempli, on le rempli avec les 7 pièces.
+     * Bag
      */
+
     var bag = {
+        // Current bag
         currentBag: [],
+
+        // Pick a tetriminos in the bag and re-fill it when empty
         getRandomPiece: function() {
 
-            // Si le bag est vide, on le remplit
+            // If the bag is empty, re-fill it
             if (this.currentBag.length == 0)
                 this.currentBag = BAG.clone();
 
-            // On enlève une pièce du bag et on le return
+            // Randomly pick a tetriminos
+            // and remove it out of the bag
             return this.currentBag.splice(rand(0, this.currentBag.length-1), 1)[0];
 
         },
+
+        // Rotate a tetriminos +90 degres
         rotatePiece: function(piece, direction) {
 
-            // @TODO Algorythme pour tourner une pièce
+            // @TODO Algorythm to rotate a tetriminos
 
         }
     };
@@ -189,19 +226,23 @@
     /*
      * Game core
      */
+
     var game = {
+        // Current game state
         state: null,
+
+        // Game initialization
         init: function() {
 
             this.state = STATE.INIT;
 
-            // Changement de la taille des canvas
+            // Set the width and the hight of canvas
             canvas.width = TILES_X * TILE_SIZE;
             canvas.height = TILES_Y * TILE_SIZE;
             preview.width  = 32;
             preview.height = 32;
 
-            // Génération du terrain
+            // Generate the boardgame
             _.board = [];
             for (var i = 0; i < TILES_X; i++)
             {
@@ -216,6 +257,8 @@
             this.loop();
 
         },
+
+        // Loop function (on each frame)
         loop: function() {
 
             this.tick++;
@@ -225,21 +268,27 @@
             _.loopRequestAnim = window.requestAnimationFrame(this.loop.bind(this));
 
         },
+
+        // Update the board game and the preview on each loop
         update: function() {
 
             // @TODO Collisions
-            // @TODO Effacer les lignes remplis
-            // @TODO Changement de pièce après une collision
-            // @TODO Gravité sur les pièces
+            // @TODO Change the current tetriminos on collision (kick on wall or blocks)
+            // @TODO Clear filled lines & set the next tetriminos
+            // @TODO Gravity
 
         },
+
+        // Draw everything on each loop (on the board game & on the preview)
         draw: function() {
 
-            this.drawBackground(); // @TODO Dessiner le background une seule fois. Ne pas le renouveler à chaque loop.
+            this.drawBackground(); // @TODO Draw the background only once. Dont renew it on each loop.
             this.drawPieces();
             this.drawPreview();
 
         },
+
+        // Draw the background (on the board game & on the preview)
         drawBackground: function() {
 
             tet.fillStyle = BACKGROUND_COLOR;
@@ -249,6 +298,8 @@
             pvw.fillRect(0, 0, 32, 32);
 
         },
+
+        // Draw the tetriminos (on the board game)
         drawPieces: function() {
 
             for (var i = 0; i < TILES_X; i++)
@@ -260,6 +311,8 @@
             }
 
         },
+
+        // Draw a block (on the board game)
         drawPiece: function(x, y, color) {
 
             if(color == COLORS.EMPTY) return;
@@ -268,15 +321,19 @@
             tet.fillRect(x*TILE_SIZE, y*TILE_SIZE, x*TILE_SIZE+TILE_SIZE, y*TILE_SIZE+TILE_SIZE);
 
         },
+
+        // Draw the next tetriminos (inside the preview)
         drawPreview: function() {
 
-            // @TODO Dessiner la pièce en cours dans le canvas preview
+            // @TODO Draw the next tetriminos inside the preview
 
         },
+
+        // Rotate the current tetriminos
         rotateCurrentPiece: function() {
 
-            // @TODO Algorythme pour tourner la pièce en cours
-            // (gérer les collisions et les kicks contre les bord du board)
+            // @TODO Rotate the current tetriminos
+            // (Handle collisions and kicks near border of gameboard)
 
         }
     };
@@ -310,6 +367,7 @@
         }
     });
 
+    // Run the game
     game.init();
 
 })();
