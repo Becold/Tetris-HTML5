@@ -273,11 +273,12 @@
         // Draw tetriminos (on the board game)
         drawPieces: function() {
 
-            for (var i = 0; i < COLUMNS; i++)
+            // Draw landed tetriminos
+            for (var x = 0; x < COLUMNS; x++)
             {
-                for (var j = 0; j < ROWS; j++)
+                for (var y = 0; y < ROWS; y++)
                 {
-                    this.drawBlock(i, j, _.board[i][j]);
+                    this.drawBlock(x, y, _.board[x][y]);
                 }
             }
 
@@ -324,12 +325,12 @@
 
             // Generate the boardgame
             _.board = [];
-            for (var i = 0; i < COLUMNS; i++)
+            for (var x = 0; x < COLUMNS; x++)
             {
-                _.board[i] = [];
-                for (var j = 0; j < ROWS; j++)
+                _.board[x] = [];
+                for (var y = 0; y < ROWS; y++)
                 {
-                    _.board[i][j] = COLORS.EMPTY;
+                    _.board[x][y] = COLORS.EMPTY;
                 }
             }
 
