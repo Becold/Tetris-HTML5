@@ -157,10 +157,12 @@
      * Globals variables
      */
 
-    var canvas = document.getElementById("canvas");
+    var backgroundGb = document.getElementById("background-game");
+    var gameboard = document.getElementById("board-game");
     var preview = document.getElementById("preview");
 
-    var tet = canvas.getContext("2d"); // Board game
+    var bgTet = backgroundGb.getContext("2d"); // Background board game
+    var tet = gameboard.getContext("2d"); // Board game
     var pvw = preview.getContext("2d"); // Preview of the next tetriminos
 
     var _ = {
@@ -230,9 +232,13 @@
 
         init: function() {
 
+            // Set background gameboard canvas
+            backgroundGb.width = CANVAS.WIDTH;
+            backgroundGb.height = CANVAS.HEIGHT;
+
             // Set gameboard canvas
-            canvas.width = CANVAS.WIDTH;
-            canvas.height = CANVAS.HEIGHT;
+            gameboard.width = CANVAS.WIDTH;
+            gameboard.height = CANVAS.HEIGHT;
 
             // Set preview canvas
             preview.width  = PREVIEW_SIZE;
@@ -245,29 +251,29 @@
         drawBackground: function() {
 
             // Gameboard background
-            tet.fillStyle = BACKGROUND_COLOR;
-            tet.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
+            bgTet.fillStyle = BACKGROUND_COLOR;
+            bgTet.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 
             // Preview background
             pvw.fillStyle = BACKGROUND_COLOR;
             pvw.fillRect(0, 0, PREVIEW_SIZE, PREVIEW_SIZE);
 
             // Gameboard grid
-            tet.strokeStyle = BORDER_COLOR;
-            tet.lineWidth = TILE_BORDER_SIZE;
+            bgTet.strokeStyle = BORDER_COLOR;
+            bgTet.lineWidth = TILE_BORDER_SIZE;
 
             for (x = 0; x <= CANVAS.WIDTH; x += (TILE_SIZE + 2*TILE_BORDER_SIZE))
             {
-                tet.moveTo(x, 0);
-                tet.lineTo(x, CANVAS.HEIGHT);
+                bgTet.moveTo(x, 0);
+                bgTet.lineTo(x, CANVAS.HEIGHT);
 
                 for (y = 0; y <= CANVAS.HEIGHT; y += (TILE_SIZE + 2*TILE_BORDER_SIZE))
                 {
-                    tet.moveTo(0, y);
-                    tet.lineTo(CANVAS.WIDTH, y);
+                    bgTet.moveTo(0, y);
+                    bgTet.lineTo(CANVAS.WIDTH, y);
                 }
             }
-            tet.stroke();
+            bgTet.stroke();
 
         },
 
@@ -315,7 +321,13 @@
 
             // @TODO Draw the next tetriminos inside the preview
 
-        }
+        },
+
+        //
+        save: function(ctx) { return ctx.save(); },
+
+        //
+        restore: function(ctx) { return ctx.restore(); }
      };
 
     /*
@@ -388,6 +400,7 @@
         // Draw everything on each loop (on the board game & on the preview)
         draw: function() {
 
+            tet.clearRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT); // @TODO Clear the canvas only when needed
             render.drawPieces();
             render.drawPreview();
 

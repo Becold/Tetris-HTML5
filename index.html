@@ -10,15 +10,27 @@
       transform: translate(-50%, -50%);
     }
 
-    #preview {
-      float: right;
+    #jeu #gameboard {
+      float: left;
+      position: relative;
+    }
+
+    #jeu #gameboard #board-game {
+      position: absolute;
+    }
+
+    #jeu #preview {
       margin-left: 8px;
     }
   </style>
 </head>
 <body>
   <div id="jeu">
-      <canvas id="canvas"></canvas>
+      <div id="gameboard">
+        <canvas id="board-game"></canvas>
+        <canvas id="background-game"></canvas>
+      </div>
+
       <canvas id="preview"></canvas>
   </div>
 
