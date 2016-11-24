@@ -20,21 +20,6 @@
     // @return float Random number between min and max
     function rand(min, max) { return (Math.random() * (max - min) + min); }
 
-    // @return array/object Clone an array or an object
-    Object.prototype.clone = function() {
-        var newObj = (this instanceof Array) ? [] : {};
-        for (i in this) {
-            if (i == 'clone')
-                continue;
-            if (this[i] && typeof this[i] == "object") {
-                newObj[i] = this[i].clone();
-            }
-            else
-                newObj[i] = this[i]
-        }
-        return newObj;
-    };
-
 
     /*
      * Constants
