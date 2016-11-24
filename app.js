@@ -289,7 +289,12 @@
             if(color == COLORS.EMPTY) return;
 
             tet.fillStyle = color;
-            tet.fillRect(x*TILE_SIZE, y*TILE_SIZE, x*TILE_SIZE+TILE_SIZE, y*TILE_SIZE+TILE_SIZE);
+            tet.fillRect(
+                (x*TILE_SIZE) + 2*x*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // x-from
+                (y*TILE_SIZE) + 2*y*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // y-from
+                TILE_SIZE, //width
+                TILE_SIZE //height
+            );
 
         },
 
