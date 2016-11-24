@@ -224,6 +224,54 @@
 
 
     /*
+     * Game engine
+     */
+
+     var render = {
+
+        // Draw the background (on the board game & on the preview)
+        drawBackground: function() {
+
+            tet.fillStyle = BACKGROUND_COLOR;
+            tet.fillRect(0, 0, COLUMNS*TILE_SIZE, ROWS*TILE_SIZE);
+
+            pvw.fillStyle = BACKGROUND_COLOR;
+            pvw.fillRect(0, 0, 32, 32);
+
+        },
+
+        // Draw tetriminos (on the board game)
+        drawPieces: function() {
+
+            for (var i = 0; i < COLUMNS; i++)
+            {
+                for (var j = 0; j < ROWS; j++)
+                {
+                    this.drawBlock(i, j, _.board[i][j]);
+                }
+            }
+
+        },
+
+        // Draw a block (on the board game)
+        drawBlock: function(x, y, color) {
+
+            if(color == COLORS.EMPTY) return;
+
+            tet.fillStyle = color;
+            tet.fillRect(x*TILE_SIZE, y*TILE_SIZE, x*TILE_SIZE+TILE_SIZE, y*TILE_SIZE+TILE_SIZE);
+
+        },
+
+        // Draw the next tetriminos (inside the preview)
+        drawPreview: function() {
+
+            // @TODO Draw the next tetriminos inside the preview
+
+        }
+     };
+
+    /*
      * Game core
      */
 
@@ -282,50 +330,9 @@
         // Draw everything on each loop (on the board game & on the preview)
         draw: function() {
 
-            this.drawBackground(); // @TODO Draw the background only once. Dont renew it on each loop.
-            this.drawPieces();
-            this.drawPreview();
-
-        },
-
-        // Draw the background (on the board game & on the preview)
-        drawBackground: function() {
-
-            tet.fillStyle = BACKGROUND_COLOR;
-            tet.fillRect(0, 0, COLUMNS*TILE_SIZE, ROWS*TILE_SIZE);
-
-            pvw.fillStyle = BACKGROUND_COLOR;
-            pvw.fillRect(0, 0, 32, 32);
-
-        },
-
-        // Draw the tetriminos (on the board game)
-        drawPieces: function() {
-
-            for (var i = 0; i < COLUMNS; i++)
-            {
-                for (var j = 0; j < ROWS; j++)
-                {
-                    this.drawPiece(i, j, _.board[i][j]);
-                }
-            }
-
-        },
-
-        // Draw a block (on the board game)
-        drawPiece: function(x, y, color) {
-
-            if(color == COLORS.EMPTY) return;
-
-            tet.fillStyle = color;
-            tet.fillRect(x*TILE_SIZE, y*TILE_SIZE, x*TILE_SIZE+TILE_SIZE, y*TILE_SIZE+TILE_SIZE);
-
-        },
-
-        // Draw the next tetriminos (inside the preview)
-        drawPreview: function() {
-
-            // @TODO Draw the next tetriminos inside the preview
+            render.drawBackground(); // @TODO Draw the background only once. Dont renew it on each loop.
+            render.drawPieces();
+            render.drawPreview();
 
         },
 
