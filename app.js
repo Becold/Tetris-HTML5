@@ -151,10 +151,6 @@
         }
     };
 
-    // Filled bag (which contains all the tetriminos)
-    const BAG = [PIECES.i, PIECES.j, PIECES.l, PIECES.o, PIECES.s, PIECES.t, PIECES.z];
-
-
     /*
      * Globals variables
      */
@@ -206,7 +202,7 @@
 
             // If the bag is empty, re-fill it
             if (this.currentBag.length == 0)
-                this.currentBag = BAG.clone();
+                this.currentBag = [PIECES.i, PIECES.j, PIECES.l, PIECES.o, PIECES.s, PIECES.t, PIECES.z];
 
             // Randomly pick a tetriminos
             // and remove it out of the bag
