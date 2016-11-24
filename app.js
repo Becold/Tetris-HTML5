@@ -329,6 +329,7 @@
             }
 
             this.state = STATE.PLAY;
+            render.drawBackground();
             this.loop();
 
         },
@@ -357,7 +358,6 @@
         // Draw everything on each loop (on the board game & on the preview)
         draw: function() {
 
-            render.drawBackground(); // @TODO Draw the background only once. Dont renew it on each loop.
             render.drawPieces();
             render.drawPreview();
 
