@@ -74,11 +74,14 @@
     // Number of vertical tiles
     const ROWS = 16;
 
-    // Size of tiles width (px)
+    // Size of tiles width (in px)
     const TILE_SIZE = 24;
 
     // Border on a tile (in px)
     const TILE_BORDER_SIZE = 2.5;
+
+    // Preview size (in px)
+    const PREVIEW_SIZE = 116;
 
     // Canvas info
     const CANVAS = {
@@ -231,8 +234,8 @@
             canvas.height = CANVAS.HEIGHT;
 
             // Set preview canvas
-            preview.width  = 32;
-            preview.height = 32;
+            preview.width  = PREVIEW_SIZE;
+            preview.height = PREVIEW_SIZE;
 
 
         },
@@ -246,7 +249,7 @@
 
             // Preview background
             pvw.fillStyle = BACKGROUND_COLOR;
-            pvw.fillRect(0, 0, 32, 32);
+            pvw.fillRect(0, 0, PREVIEW_SIZE, PREVIEW_SIZE);
 
             // Gameboard grid
             tet.strokeStyle = BORDER_COLOR;
