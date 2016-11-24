@@ -58,11 +58,15 @@
         GREEN: "#2f9e44",
         LIME: "#66a80f",
         YELLOW: "#f08c00",
-        ORANGE: "#e8590c"
+        ORANGE: "#e8590c",
+        WHITE: "#ffffff"
     }
 
     // Background color
     const BACKGROUND_COLOR = COLORS.GRAYLIGHT;
+
+    // Background color
+    const BORDER_COLOR = COLORS.WHITE;
 
     // Number of horizontal tiles
     const COLUMNS = 10;
@@ -71,10 +75,19 @@
     const ROWS = 16;
 
     // Size of tiles width (px)
-    const TILE_SIZE = 8;
+    const TILE_SIZE = 24;
 
-    // @TODO Add a Border on a tile (in px)
-    // const TILE_BORDER = 2;
+    // Border on a tile (in px)
+    const TILE_BORDER_SIZE = 2.5;
+
+    // Canvas info
+    const CANVAS = {
+        // Canvas width (in px)
+        WIDTH: COLUMNS * (TILE_SIZE + (2 * TILE_BORDER_SIZE)),
+
+        // Canvas height (in px)
+        HEIGHT: ROWS * (TILE_SIZE + (2 * TILE_BORDER_SIZE))
+    };
 
     // Tetriminos
     const PIECES = {
@@ -135,6 +148,7 @@
             ]
         }
     };
+
 
     /*
      * Globals variables
@@ -210,14 +224,46 @@
 
      var render = {
 
+        init: function() {
+
+            // Set gameboard canvas
+            canvas.width = CANVAS.WIDTH;
+            canvas.height = CANVAS.HEIGHT;
+
+            // Set preview canvas
+            preview.width  = 32;
+            preview.height = 32;
+
+
+        },
+
         // Draw the background (on the board game & on the preview)
         drawBackground: function() {
 
+            // Gameboard background
             tet.fillStyle = BACKGROUND_COLOR;
-            tet.fillRect(0, 0, COLUMNS*TILE_SIZE, ROWS*TILE_SIZE);
+            tet.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 
+            // Preview background
             pvw.fillStyle = BACKGROUND_COLOR;
             pvw.fillRect(0, 0, 32, 32);
+
+            // Gameboard grid
+            tet.strokeStyle = BORDER_COLOR;
+            tet.lineWidth = TILE_BORDER_SIZE;
+
+            for (x = 0; x <= CANVAS.WIDTH; x += (TILE_SIZE + (2 * TILE_BORDER_SIZE)))
+            {
+                tet.moveTo(x, 0);
+                tet.lineTo(x, CANVAS.HEIGHT);
+
+                for (y = 0; y <= CANVAS.HEIGHT; y += (TILE_SIZE + ( 2 * TILE_BORDER_SIZE)))
+                {
+                    tet.moveTo(0, y);
+                    tet.lineTo(CANVAS.WIDTH, y);
+                }
+            }
+            tet.stroke();
 
         },
 
@@ -261,15 +307,12 @@
         state: null,
 
         // Game initialization
-        init: function() {
+        run: function() {
 
             this.state = STATE.INIT;
 
-            // Set the width and the hight of canvas
-            canvas.width = COLUMNS * TILE_SIZE;
-            canvas.height = ROWS * TILE_SIZE;
-            preview.width  = 32;
-            preview.height = 32;
+            // Game engine initisialization
+            render.init();
 
             // Generate the boardgame
             _.board = [];
@@ -356,6 +399,6 @@
     });
 
     // Run the game
-    game.init();
+    game.run();
 
 })();
