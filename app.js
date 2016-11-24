@@ -167,8 +167,8 @@
         // Tick game
         tick: 0,
 
-        // Movement speed of tetriminos
-        speed: 250,
+        // Movement speed of tetriminos (60 = 1 sec)
+        speed: 1 * 60,
 
         // Player score
         score: 0,
@@ -184,7 +184,8 @@
 
         // Current tetriminos
         currentPiece: {
-            type: null,
+            color: null,
+            blocks: null,
             offsetY: null,
             offsetY: null
         }
@@ -255,12 +256,12 @@
             tet.strokeStyle = BORDER_COLOR;
             tet.lineWidth = TILE_BORDER_SIZE;
 
-            for (x = 0; x <= CANVAS.WIDTH; x += (TILE_SIZE + (2 * TILE_BORDER_SIZE)))
+            for (x = 0; x <= CANVAS.WIDTH; x += (TILE_SIZE + 2*TILE_BORDER_SIZE))
             {
                 tet.moveTo(x, 0);
                 tet.lineTo(x, CANVAS.HEIGHT);
 
-                for (y = 0; y <= CANVAS.HEIGHT; y += (TILE_SIZE + ( 2 * TILE_BORDER_SIZE)))
+                for (y = 0; y <= CANVAS.HEIGHT; y += (TILE_SIZE + 2*TILE_BORDER_SIZE))
                 {
                     tet.moveTo(0, y);
                     tet.lineTo(CANVAS.WIDTH, y);
@@ -282,6 +283,16 @@
                 }
             }
 
+            // Draw current tetriminos
+            for (var x = 0; x < _.currentPiece.blocks.length; x++)
+            {
+                for (var y = 0; y < _.currentPiece.blocks[x].length; y++)
+                {
+                    if(_.currentPiece.blocks[x][y] == 0) continue;
+                    this.drawBlock(x + _.currentPiece.offsetX, y + _.currentPiece.offsetY, _.currentPiece.color);
+                }
+            }
+
         },
 
         // Draw a block (on the board game)
@@ -291,8 +302,8 @@
 
             tet.fillStyle = color;
             tet.fillRect(
-                (x*TILE_SIZE) + 2*x*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // x-from
-                (y*TILE_SIZE) + 2*y*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // y-from
+                x*TILE_SIZE + 2*x*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // x-from
+                y*TILE_SIZE + 2*y*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // y-from
                 TILE_SIZE, //width
                 TILE_SIZE //height
             );
@@ -343,7 +354,7 @@
         // Loop function (on each frame)
         loop: function() {
 
-            this.tick++;
+            _.tick++;
             this.update();
             this.draw();
 
@@ -353,6 +364,19 @@
 
         // Update the board game and the preview on each loop
         update: function() {
+
+            // Pick a new tetriminos from the bag
+            // @TODO Pick a tetriminos, put it in the preview, then use it later
+            if (_.currentPiece.blocks == null) {
+                _.currentPiece = bag.getRandomPiece();
+                _.currentPiece.offsetX = 3;
+                _.currentPiece.offsetY = 0;
+            }
+
+            // Gravity
+            if (_.tick % _.speed == 0) {
+                _.currentPiece.offsetY++;
+            }
 
             // @TODO Collisions
             // @TODO Change the current tetriminos on collision (kick on wall or blocks)
