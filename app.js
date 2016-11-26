@@ -68,10 +68,10 @@
     // Background color
     const BORDER_COLOR = COLORS.WHITE;
 
-    // Number of horizontal tiles
+    // Number of tiles on x-axe
     const COLUMNS = 10;
 
-    // Number of vertical tiles
+    // Number of tiles on y-axe
     const ROWS = 16;
 
     // Size of tiles width (in px)
@@ -116,7 +116,7 @@
             blocks: [
                 [0, 0, 0],
                 [1, 1, 1],
-                [0, 0, 1]
+                [1, 0, 0]
             ]
         },
         o: {
@@ -281,20 +281,21 @@
         drawPieces: function() {
 
             // Draw landed tetriminos
-            for (var x = 0; x < COLUMNS; x++)
+            for (var y = 0; y < ROWS; y++)
             {
-                for (var y = 0; y < ROWS; y++)
+                for (var x = 0; x < COLUMNS; x++)
                 {
-                    this.drawBlock(x, y, _.board[x][y]);
+                    this.drawBlock(x, y, _.board[y][x]);
                 }
             }
 
             // Draw current tetriminos
-            for (var x = 0; x < _.currentPiece.blocks.length; x++)
+            for (var y = 0; y < _.currentPiece.blocks.length; y++)
             {
-                for (var y = 0; y < _.currentPiece.blocks[x].length; y++)
+                for (var x = 0; x < _.currentPiece.blocks[y].length; x++)
                 {
                     if(_.currentPiece.blocks[x][y] == 0) continue;
+
                     this.drawBlock(x + _.currentPiece.offsetX, y + _.currentPiece.offsetY, _.currentPiece.color);
                 }
             }
@@ -323,10 +324,10 @@
 
         },
 
-        //
+        // Save the context
         save: function(ctx) { return ctx.save(); },
 
-        //
+        // Restore the context
         restore: function(ctx) { return ctx.restore(); }
      };
 
@@ -348,12 +349,12 @@
 
             // Generate the boardgame
             _.board = [];
-            for (var x = 0; x < COLUMNS; x++)
+            for (var y = 0; y < ROWS; y++)
             {
-                _.board[x] = [];
-                for (var y = 0; y < ROWS; y++)
+                _.board[y] = [];
+                for (var x = 0; x < COLUMNS; x++)
                 {
-                    _.board[x][y] = COLORS.EMPTY;
+                   _.board[y][x] = COLORS.EMPTY;
                 }
             }
 
@@ -380,7 +381,7 @@
             // Pick a new tetriminos from the bag
             // @TODO Pick a tetriminos, put it in the preview, then use it later
             if (_.currentPiece.blocks == null) {
-                _.currentPiece = bag.getRandomPiece();
+                _.currentPiece = bag.getRandomPiece();  
                 _.currentPiece.offsetX = 3;
                 _.currentPiece.offsetY = 0;
             }
