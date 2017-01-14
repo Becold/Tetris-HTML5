@@ -20,6 +20,20 @@
     // @return float Random number between min and max
     function rand(min, max) { return (Math.random() * (max - min) + min); }
 
+    // @return array Rotate 2D-Array
+    // Credit to http://zurb.com/forrst/posts/Rotating_2d_arrays_in_JavaScript-LWc
+    function transpose(array) {
+            var temp = new Array(array.length);
+            var i, j;
+            for(i = 0; i < temp.length; ++i){
+                temp[i] = new Array(temp.length);
+                for (j = 0; j < temp.length; ++j){
+                    temp[i][j] = array[temp.length - j - 1][i];
+                }
+            }
+            return temp;
+    }
+
 
     /*
      * Constants
@@ -207,6 +221,7 @@
      */
 
     var bag = {
+
         // Current bag
         currentBag: [],
 
@@ -221,14 +236,8 @@
             // and remove it out of the bag
             return this.currentBag.splice(rand(0, this.currentBag.length-1), 1)[0];
 
-        },
-
-        // Rotate a tetriminos +90 degres
-        rotatePiece: function(piece, direction) {
-
-            // @TODO Algorythm to rotate a tetriminos
-
         }
+
     };
 
 
@@ -397,10 +406,7 @@
                 this.moveCurrentPiece(DIR.DOWN);
             }
 
-            // @TODO Collisions
-            // @TODO Change the current tetriminos on collision (kick on wall or blocks)
             // @TODO Clear filled lines & set the next tetriminos
-            // @TODO Gravity
 
         },
 
@@ -416,8 +422,16 @@
         // Rotate the current tetriminos
         rotateCurrentPiece: function() {
 
-            // @TODO Rotate the current tetriminos
-            // (Handle collisions and kicks near border of gameboard)
+            var rotatedPiece = transpose(_.currentPiece.blocks);
+
+            if (this.canMoveTo(_.currentPiece.offsetX, _.currentPiece.offsetY, rotatedPiece))
+            {
+                _.currentPiece.blocks = rotatedPiece;
+            }
+            else
+            {
+                // @TODO Wallkick
+            }
 
         },
 
@@ -473,8 +487,15 @@
             _.currentPiece = bag.getRandomPiece();
 
             // @TODO Check if there is landed blocks at spawn. If  yes, we lose.
-            _.currentPiece.offsetX = 3;
-            _.currentPiece.offsetY = 0;
+            if(this.canMoveTo(3, 0, _.currentPiece.blocks))
+            {
+                _.currentPiece.offsetX = 3;
+                _.currentPiece.offsetY = 0;
+            }
+            else
+            {
+                alert("You lose!");
+            }
 
         },
 
