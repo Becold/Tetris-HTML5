@@ -42,6 +42,14 @@
         GAMEOVER: 3
     }
 
+    // Direction
+    const DIR = {
+        UP: 1,
+        RIGHT: 2,
+        DOWN: 3,
+        LEFT: 4
+    }
+
     // Blocks colors
     const COLORS = {
         EMPTY: -1,
@@ -381,7 +389,7 @@
             // Pick a new tetriminos from the bag
             // @TODO Pick a tetriminos, put it in the preview, then use it later
             if (_.currentPiece.blocks == null) {
-                _.currentPiece = bag.getRandomPiece();  
+                _.currentPiece = bag.getRandomPiece();
                 _.currentPiece.offsetX = 3;
                 _.currentPiece.offsetY = 0;
             }
@@ -413,6 +421,28 @@
             // @TODO Rotate the current tetriminos
             // (Handle collisions and kicks near border of gameboard)
 
+        },
+
+        //
+        moveCurrentPiece: function(dir) {
+
+            switch(dir) {
+                case DIR.RIGHT:
+                    _.currentPiece.offsetX++;
+                    break;
+
+                case DIR.DOWN:
+                    _.currentPiece.offsetY++;
+                    break;
+
+                case DIR.LEFT:
+                    _.currentPiece.offsetX--;
+                    break;
+
+                default:
+                    return;
+            }
+
         }
     };
 
@@ -426,20 +456,25 @@
         // @TODO Game controller
         switch (event.keyCode) {
             case KEY.LEFT:
-
+                game.moveCurrentPiece(DIR.LEFT);
                 break;
+
             case KEY.RIGHT:
-
+                game.moveCurrentPiece(DIR.RIGHT);
                 break;
+
             case KEY.UP:
-
+                game.rotateCurrentPiece();
                 break;
+
             case KEY.DOWN:
-
+                game.moveCurrentPiece(DIR.DOWN);
                 break;
+
             case KEY.SPACE:
-
+                // @TODO Drop the current tetriminos
                 break;
+
             default:
                 return;
         }
