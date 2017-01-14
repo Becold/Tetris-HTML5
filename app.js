@@ -389,14 +389,12 @@
             // Pick a new tetriminos from the bag
             // @TODO Pick a tetriminos, put it in the preview, then use it later
             if (_.currentPiece.blocks == null) {
-                _.currentPiece = bag.getRandomPiece();
-                _.currentPiece.offsetX = 3;
-                _.currentPiece.offsetY = 0;
+                this.triggerNextPiece();
             }
 
             // Gravity
             if (_.tick % _.speed == 0) {
-                _.currentPiece.offsetY++;
+                this.moveCurrentPiece(DIR.DOWN);
             }
 
             // @TODO Collisions
@@ -423,24 +421,105 @@
 
         },
 
-        //
+        // Move the current tetriminos to dir
         moveCurrentPiece: function(dir) {
 
+            // Eval the potential position
+            var potentialOffsetX = _.currentPiece.offsetX;
+            var potentialOffsetY = _.currentPiece.offsetY;
+
+            switch(dir) {
+                case DIR.RIGHT: potentialOffsetX++; break;
+                case DIR.LEFT: potentialOffsetX--; break;
+                case DIR.DOWN: potentialOffsetY++; break;
+                default:
+                    return;
+            }
+
+            // Collision?
             switch(dir) {
                 case DIR.RIGHT:
-                    _.currentPiece.offsetX++;
+                case DIR.LEFT:
+                        if(this.canMoveTo(potentialOffsetX, potentialOffsetY, _.currentPiece.blocks))
+                        {
+                            _.currentPiece.offsetX = potentialOffsetX;
+                            _.currentPiece.offsetY = potentialOffsetY;
+                        }
                     break;
 
                 case DIR.DOWN:
-                    _.currentPiece.offsetY++;
-                    break;
-
-                case DIR.LEFT:
-                    _.currentPiece.offsetX--;
+                    if(this.isBottomBoard(potentialOffsetX, potentialOffsetY, _.currentPiece.blocks) ||
+                       !this.canMoveTo(potentialOffsetX, potentialOffsetY, _.currentPiece.blocks)
+                    )
+                    {
+                        this.landCurrentPiece();
+                        this.triggerNextPiece();
+                    }
+                    else
+                    {
+                            _.currentPiece.offsetX = potentialOffsetX;
+                            _.currentPiece.offsetY = potentialOffsetY;
+                    }
                     break;
 
                 default:
                     return;
+            }
+        },
+
+        // Trigger the next piece
+        triggerNextPiece: function() {
+
+            _.currentPiece = bag.getRandomPiece();
+
+            // @TODO Check if there is landed blocks at spawn. If  yes, we lose.
+            _.currentPiece.offsetX = 3;
+            _.currentPiece.offsetY = 0;
+
+        },
+
+        // Check if tetriminos is at the bottom of the board
+        isBottomBoard: function(offsetX, offsetY, blocks) {
+
+            for (var y = 0; y < blocks.length; y++)
+            {
+                for (var x = 0; x < blocks[y].length; x++)
+                {
+                    if (blocks[x][y] == 0) continue;
+
+                    if (y + offsetY >= _.board.length) return true;
+                }
+            }
+            return false;
+        },
+
+        // Check if tetriminos can move to position
+        canMoveTo: function(offsetX, offsetY, blocks) {
+
+            for (var y = 0; y < blocks.length; y++)
+            {
+                for (var x = 0; x < blocks[y].length; x++)
+                {
+                    if (blocks[x][y] == 0) continue;
+
+                    // Block is already taken
+                    if (_.board[y + offsetY][x + offsetX] != COLORS.EMPTY) return false;
+                }
+            }
+            return true;
+        },
+
+        // Land the current tetriminos to the board
+        landCurrentPiece: function() {
+
+            for (var y = 0; y < _.currentPiece.blocks.length; y++)
+            {
+                for (var x = 0; x < _.currentPiece.blocks[y].length; x++)
+                {
+                    if (_.currentPiece.blocks[x][y] == 0) continue;
+
+                    _.board[_.currentPiece.offsetY + y][_.currentPiece.offsetX + x] = _.currentPiece.color;
+                }
             }
 
         }
