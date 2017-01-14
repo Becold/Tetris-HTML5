@@ -494,6 +494,7 @@
             }
             else
             {
+                _.speed = 0;
                 alert("You lose!");
             }
 
