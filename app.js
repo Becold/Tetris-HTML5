@@ -41,19 +41,21 @@
 
     // Keyboard key code
     const KEY = {
-        SPACE: 32,
         LEFT: 37,
         UP: 38,
         RIGHT: 39,
-        DOWN: 40
+        DOWN: 40,
+
+        ESCAPE: 27,
+        SPACE: 32,
+
+        P: 80
     }
 
     // Possible game state
     const STATE = {
-        INIT: 0,
-        PLAY: 1,
-        PAUSE: 2,
-        GAMEOVER: 3
+        PAUSE: 0,
+        PLAY: 1
     }
 
     // Direction
@@ -353,13 +355,14 @@
      */
 
     var game = {
+
         // Current game state
         state: null,
 
         // Game initialization
         run: function() {
 
-            this.state = STATE.INIT;
+            this.state = STATE.PLAY;
 
             // Game engine initisialization
             render.init();
@@ -375,7 +378,6 @@
                 }
             }
 
-            this.state = STATE.PLAY;
             render.drawBackground();
             this.loop();
 
@@ -394,6 +396,8 @@
 
         // Update the board game and the preview on each loop
         update: function() {
+
+            if (this.state != STATE.PLAY) return;
 
             // Pick a new tetriminos from the bag
             // @TODO Pick a tetriminos, put it in the preview, then use it later
@@ -567,6 +571,12 @@
             // Get a new tetriminos
             this.triggerNextPiece();
 
+        },
+
+        togglePause: function() {
+
+            this.state = !this.state;
+
         }
 
     };
@@ -576,9 +586,15 @@
      * Events listeners
      */
     window.addEventListener("keydown", function(event) {
-        if (game.state !== STATE.PLAY) return;
 
-        // @TODO Game controller
+        // Handle the pause state
+        if (event.keyCode == KEY.ESCAPE ||
+            event.keyCode == KEY.P) {
+            game.togglePause();
+        }
+        if (game.state == STATE.PAUSE) return;
+
+        // Game controller
         switch (event.keyCode) {
             case KEY.LEFT:
                 game.moveCurrentPiece(DIR.LEFT);
