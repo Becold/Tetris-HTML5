@@ -494,8 +494,9 @@
             }
             else
             {
-                _.speed = 0;
-                alert("You lose!");
+                // @TODO Better alert
+                alert('You lose!');
+                this.reset();
             }
 
         },
@@ -544,7 +545,30 @@
                 }
             }
 
+        },
+
+        // Reset the game
+        reset: function() {
+
+            // Re-generate the board
+            _.board = [];
+            for (var y = 0; y < ROWS; y++)
+            {
+                _.board[y] = [];
+                for (var x = 0; x < COLUMNS; x++)
+                {
+                   _.board[y][x] = COLORS.EMPTY;
+                }
+            }
+
+            // Reset the speed
+            _.speed = 1 * 60;
+
+            // Get a new tetriminos
+            this.triggerNextPiece();
+
         }
+
     };
 
 
