@@ -213,7 +213,7 @@
             color: null,
             blocks: null,
             offsetY: null,
-            offsetY: null
+            offsetX: null
         }
     };
 
