@@ -379,6 +379,7 @@
             }
 
             render.drawBackground();
+            this.triggerNextPiece();
             this.loop();
 
         },
@@ -398,12 +399,6 @@
         update: function() {
 
             if (this.state != STATE.PLAY) return;
-
-            // Pick a new tetriminos from the bag
-            // @TODO Pick a tetriminos, put it in the preview, then use it later
-            if (_.currentPiece.blocks == null) {
-                this.triggerNextPiece();
-            }
 
             // Gravity
             if (_.tick % _.speed == 0) {
