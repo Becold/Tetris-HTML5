@@ -191,6 +191,9 @@
     var bgPvw = backgroundPvw.getContext("2d"); // Background of the next tetriminos
     var pvw = preview.getContext("2d"); // Preview of the next tetriminos
 
+
+    var scoreElem = document.getElementById("score"); // Score display
+
     var _ = {
         // Tick game
         tick: 0,
@@ -365,7 +368,14 @@
         save: function(ctx) { return ctx.save(); },
 
         // Restore the context
-        restore: function(ctx) { return ctx.restore(); }
+        restore: function(ctx) { return ctx.restore(); },
+
+        // Update the score board display
+        updateScore: function() {
+
+            scoreElem.innerHTML = _.score;
+
+        }
      };
 
     /*
@@ -548,6 +558,10 @@
                            newEmptyLine[z] = COLORS.EMPTY;
                         }
                         _.board.unshift(newEmptyLine);
+
+                        // Update scoreboard
+                        this.score.add(10);
+                        render.updateScore();
                    }
                 }
             }
@@ -626,6 +640,12 @@
 
             this.state = !this.state;
 
+        },
+
+        // Set score
+        score: {
+            set: function(value) { _.score = value; },
+            add: function(value) { _.score += value; }
         }
 
     };
