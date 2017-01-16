@@ -466,6 +466,7 @@
                     )
                     {
                         this.landCurrentPiece();
+                        this.clearFullLines();
                         this.triggerNextPiece();
                     }
                     else
@@ -496,6 +497,35 @@
                 // @TODO Better alert
                 alert('You lose!');
                 this.reset();
+            }
+
+        },
+
+        // Clear lines if there is/are any
+        clearFullLines: function() {
+
+            for (var y = 0; y < ROWS; y++)
+            {
+                for (var x = 0; x < COLUMNS; x++)
+                {
+                    // If one of the block is empty, we pass to the following line
+                   if (_.board[y][x] == COLORS.EMPTY) { break; }
+
+                   // If line is full, clear it
+                   if (x == COLUMNS - 1)
+                   {
+                        // Remove the line
+                        _.board.splice(y, 1);
+
+                        // Add a new empty line
+                        var newEmptyLine = [];
+                        for(var z = 0; z < COLUMNS; z++)
+                        {
+                           newEmptyLine[z] = COLORS.EMPTY;
+                        }
+                        _.board.unshift(newEmptyLine);
+                   }
+                }
             }
 
         },
