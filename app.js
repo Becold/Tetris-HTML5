@@ -183,10 +183,12 @@
 
     var backgroundGb = document.getElementById("background-game");
     var gameboard = document.getElementById("board-game");
-    var preview = document.getElementById("preview");
+    var backgroundPvw = document.getElementById("background-pvw");
+    var preview = document.getElementById("board-pvw");
 
     var bgTet = backgroundGb.getContext("2d"); // Background board game
     var tet = gameboard.getContext("2d"); // Board game
+    var bgPvw = backgroundPvw.getContext("2d"); // Background of the next tetriminos
     var pvw = preview.getContext("2d"); // Preview of the next tetriminos
 
     var _ = {
@@ -214,7 +216,13 @@
             blocks: null,
             offsetY: null,
             offsetX: null
-        }
+        },
+
+        // Next tetriminos
+        nextPiece:  {
+            color: null,
+            blocks: null
+        },
     };
 
 
@@ -259,6 +267,10 @@
             gameboard.width = CANVAS.WIDTH;
             gameboard.height = CANVAS.HEIGHT;
 
+            // Set background preview canvas
+            backgroundPvw.width  = PREVIEW_SIZE;
+            backgroundPvw.height = PREVIEW_SIZE;
+
             // Set preview canvas
             preview.width  = PREVIEW_SIZE;
             preview.height = PREVIEW_SIZE;
@@ -274,8 +286,8 @@
             bgTet.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
 
             // Preview background
-            pvw.fillStyle = BACKGROUND_COLOR;
-            pvw.fillRect(0, 0, PREVIEW_SIZE, PREVIEW_SIZE);
+            bgPvw.fillStyle = BACKGROUND_COLOR;
+            bgPvw.fillRect(0, 0, PREVIEW_SIZE, PREVIEW_SIZE);
 
             // Gameboard grid
             bgTet.strokeStyle = BORDER_COLOR;
@@ -319,27 +331,33 @@
                 }
             }
 
+
+            // Draw next tetriminos
+            for (var y = 0; y < _.nextPiece.blocks.length; y++)
+            {
+                for (var x = 0; x < _.nextPiece.blocks[y].length; x++)
+                {
+                    if(_.nextPiece.blocks[x][y] == 0) continue;
+
+                    this.drawBlock(x, y, _.nextPiece.color, pvw);
+                }
+            }
+
         },
 
         // Draw a block (on the board game)
-        drawBlock: function(x, y, color) {
+        drawBlock: function(x, y, color, ctx) {
 
             if(color == COLORS.EMPTY) return;
+            ctx = (ctx != null) ? ctx : tet;
 
-            tet.fillStyle = color;
-            tet.fillRect(
+            ctx.fillStyle = color;
+            ctx.fillRect(
                 x*TILE_SIZE + 2*x*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // x-from
                 y*TILE_SIZE + 2*y*TILE_BORDER_SIZE + TILE_BORDER_SIZE, // y-from
                 TILE_SIZE, //width
                 TILE_SIZE //height
             );
-
-        },
-
-        // Draw the next tetriminos (inside the preview)
-        drawPreview: function() {
-
-            // @TODO Draw the next tetriminos inside the preview
 
         },
 
@@ -378,7 +396,11 @@
                 }
             }
 
+            // Render the background only once
             render.drawBackground();
+
+            // Start the game
+            _.nextPiece = bag.getRandomPiece();
             this.triggerNextPiece();
             this.loop();
 
@@ -405,16 +427,14 @@
                 this.moveCurrentPiece(DIR.DOWN);
             }
 
-            // @TODO Clear filled lines & set the next tetriminos
-
         },
 
         // Draw everything on each loop (on the board game & on the preview)
         draw: function() {
 
             tet.clearRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT); // @TODO Clear the canvas only when needed
+            pvw.clearRect(0, 0, PREVIEW_SIZE, PREVIEW_SIZE); // @TODO Clear the canvas only when needed
             render.drawPieces();
-            render.drawPreview();
 
         },
 
@@ -484,7 +504,11 @@
         // Trigger the next piece
         triggerNextPiece: function() {
 
-            _.currentPiece = bag.getRandomPiece();
+            // Throw the current piece for the one in the preview
+            _.currentPiece = _.nextPiece;
+
+            // Get a random tetriminos in the preview (for the next one)
+            _.nextPiece = bag.getRandomPiece();
 
             // @TODO Check if there is landed blocks at spawn. If  yes, we lose.
             if(this.canMoveTo(3, 0, _.currentPiece.blocks))

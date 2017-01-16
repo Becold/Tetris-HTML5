@@ -10,17 +10,29 @@
       transform: translate(-50%, -50%);
     }
 
+    /*
+     * Gameboard
+     */
     #jeu #gameboard {
-      float: left;
       position: relative;
+      float: left;
     }
 
     #jeu #gameboard #board-game {
       position: absolute;
     }
 
+    /*
+     * Preview
+     */
     #jeu #preview {
+      float: right;
+      position: relative;
       margin-left: 8px;
+    }
+
+    #jeu #preview #board-pvw {
+      position: absolute;
     }
   </style>
 </head>
@@ -31,7 +43,10 @@
         <canvas id="background-game"></canvas>
       </div>
 
-      <canvas id="preview"></canvas>
+      <div id="preview">
+        <canvas id="board-pvw"></canvas>
+        <canvas id="background-pvw"></canvas>
+      </div>
   </div>
 
   <script src="app.js"></script>
