@@ -409,6 +409,9 @@
             // Render the background only once
             render.drawBackground();
 
+            // Keyboard initialization
+            keyboard.init();
+
             // Start the game
             _.nextPiece = bag.getRandomPiece();
             this.triggerNextPiece();
@@ -430,6 +433,10 @@
         // Update the board game and the preview on each loop
         update: function() {
 
+            // Capture the user's action (on his keyboard)
+            keyboard.controller();
+
+            // Dont update if we pause the game
             if (this.state != STATE.PLAY) return;
 
             // Gravity
@@ -650,45 +657,93 @@
 
     };
 
+    /*
+     * Keyboard controller
+     */
+
+    var keyboard = {
+
+        keyPressed: [],
+        keyTimer: [],
+
+        init: function() {
+
+            for (var i = 0; i < Object.values(KEY).length; i++)
+            {
+                var key = parseInt(Object.values(KEY)[i]);
+                this.keyPressed[key] = false;
+                this.keyTimer[key] = 0;
+            }
+
+        },
+
+        onKeydown: function (event) {
+            keyboard.keyPressed[event.keyCode] = true;
+        },
+
+        onKeyup: function(event) {
+            keyboard.keyPressed[event.keyCode] = false;
+            keyboard.keyTimer[event.keyCode] = 0;
+        },
+
+        controller: function() {
+
+            this.addKeyController([KEY.ESCAPE, KEY.P], 10, function() {
+                game.togglePause();
+            });
+
+            this.addKeyController([KEY.LEFT], 10, function() {
+                game.moveCurrentPiece(DIR.LEFT);
+            });
+
+            this.addKeyController([KEY.RIGHT], 10, function() {
+                game.moveCurrentPiece(DIR.RIGHT);
+            });
+
+            this.addKeyController([KEY.DOWN], 10, function() {
+                game.moveCurrentPiece(DIR.DOWN);
+            });
+
+            this.addKeyController([KEY.UP], 10, function() {
+                game.rotateCurrentPiece();
+            });
+
+            this.addKeyController([KEY.SPACE], 10, function() {
+                // @TODO Drop the current tetriminos
+            });
+
+        },
+
+        addKeyController: function(keys, durationPause, callback) {
+
+            for (var i = 0; i < keys.length; i++)
+            {
+                if (this.keyPressed[keys[i]])
+                {
+                    this.keyTimer[keys[i]]++;
+
+                    if (this.keyTimer[keys[i]] % durationPause == 1) {
+                        console.log(this.keyTimer[keys[i]]);
+                        callback();
+                    }
+                    if (this.keyTimer[keys[i]] >= durationPause[1]) {
+                        this.keyTimer[keys[i]] = 0;
+                    }
+
+                    break;
+                }
+            }
+
+        }
+
+    };
+
 
     /*
      * Events listeners
      */
-    window.addEventListener("keydown", function(event) {
-
-        // Handle the pause state
-        if (event.keyCode == KEY.ESCAPE ||
-            event.keyCode == KEY.P) {
-            game.togglePause();
-        }
-        if (game.state == STATE.PAUSE) return;
-
-        // Game controller
-        switch (event.keyCode) {
-            case KEY.LEFT:
-                game.moveCurrentPiece(DIR.LEFT);
-                break;
-
-            case KEY.RIGHT:
-                game.moveCurrentPiece(DIR.RIGHT);
-                break;
-
-            case KEY.UP:
-                game.rotateCurrentPiece();
-                break;
-
-            case KEY.DOWN:
-                game.moveCurrentPiece(DIR.DOWN);
-                break;
-
-            case KEY.SPACE:
-                // @TODO Drop the current tetriminos
-                break;
-
-            default:
-                return;
-        }
-    });
+    window.addEventListener("keydown", keyboard.onKeydown);
+    window.addEventListener("keyup", keyboard.onKeyup);
 
     // Run the game
     game.run();
