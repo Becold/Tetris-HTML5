@@ -439,9 +439,14 @@
             // Dont update if we pause the game
             if (this.state != STATE.PLAY) return;
 
-            // Gravity
             if (_.tick % _.speed == 0) {
+
+                // Don't apply gravity on current tetriminos when pressing down key
+                if (keyboard.keyPressed[KEY.DOWN]) return;
+
+                // Apply gravity
                 this.moveCurrentPiece(DIR.DOWN);
+
             }
 
         },
