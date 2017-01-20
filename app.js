@@ -629,6 +629,10 @@
         // Reset the game
         reset: function() {
 
+            // Empty keyPressed
+            keyboard.keyPressed = [];
+            keyboard.init();
+
             // Re-generate the board
             _.board = [];
             for (var y = 0; y < ROWS; y++)
