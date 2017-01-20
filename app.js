@@ -191,15 +191,21 @@
     var bgPvw = backgroundPvw.getContext("2d"); // Background of the next tetriminos
     var pvw = preview.getContext("2d"); // Preview of the next tetriminos
 
+    var then, now, elapsed;
+    var fps = 60;
+
 
     var scoreElem = document.getElementById("score"); // Score display
 
     var _ = {
-        // Tick game
-        tick: 0,
+        // tick frame
+        tickframe: 0,
 
-        // Movement speed of tetriminos (60 = 1 sec)
-        speed: 1 * 60,
+        // Tick game
+        tickgame: 0,
+
+        // Movement speed of tetriminos
+        speed: 30,
 
         // Player score
         score: 0,
@@ -225,7 +231,7 @@
         nextPiece:  {
             color: null,
             blocks: null
-        },
+        }
     };
 
 
@@ -412,6 +418,10 @@
             // Keyboard initialization
             keyboard.init();
 
+            // Eval delta time
+            then = Date.now();
+            now = then;
+
             // Start the game
             _.nextPiece = bag.getRandomPiece();
             this.triggerNextPiece();
@@ -422,9 +432,19 @@
         // Loop function (on each frame)
         loop: function() {
 
-            _.tick++;
-            this.update();
+            _.tickframe++;
             this.draw();
+
+            now = Date.now();
+            elapsed = now - then;
+            if (elapsed > 1000/fps)
+            {
+                _.tickgame++;
+                then = now - (elapsed % (1000/fps));
+
+                this.update();
+            }
+
 
             _.loopRequestAnim = window.requestAnimationFrame(this.loop.bind(this));
 
@@ -439,7 +459,7 @@
             // Dont update if we pause the game
             if (this.state != STATE.PLAY) return;
 
-            if (_.tick % _.speed == 0) {
+            if (_.tickgame % _.speed == 0) {
 
                 // Don't apply gravity on current tetriminos when pressing down key
                 if (keyboard.keyPressed[KEY.DOWN]) return;
@@ -629,7 +649,7 @@
         // Reset the game
         reset: function() {
 
-            // Empty keyPressed
+            // Clear pressed keys
             keyboard.keyPressed = [];
             keyboard.init();
 
@@ -645,7 +665,7 @@
             }
 
             // Reset the speed
-            _.speed = 1 * 60;
+            _.speed = 30;
 
             // Get a new tetriminos
             this.triggerNextPiece();
@@ -732,7 +752,6 @@
                     this.keyTimer[keys[i]]++;
 
                     if (this.keyTimer[keys[i]] % durationPause == 1) {
-                        console.log(this.keyTimer[keys[i]]);
                         callback();
                     }
                     if (this.keyTimer[keys[i]] >= durationPause[1]) {
