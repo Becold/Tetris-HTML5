@@ -593,7 +593,6 @@
 
                         // Update scoreboard
                         this.score.add(10);
-                        render.updateScore();
                    }
                 }
             }
@@ -683,8 +682,14 @@
 
         // Set score
         score: {
-            set: function(value) { _.score = value; },
-            add: function(value) { _.score += value; }
+            set: function(value) {
+                _.score = value;
+                render.updateScore();
+            },
+            add: function(value) {
+                _.score += value;
+                render.updateScore();
+            }
         }
 
     };
