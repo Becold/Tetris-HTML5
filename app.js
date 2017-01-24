@@ -729,7 +729,7 @@
                 game.moveCurrentPiece(DIR.RIGHT);
             });
 
-            this.addKeyController([KEY.DOWN], 10, function() {
+            this.addKeyController([KEY.DOWN], 7, function() {
                 game.moveCurrentPiece(DIR.DOWN);
             });
 
