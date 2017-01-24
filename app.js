@@ -667,6 +667,9 @@
             // Reset the speed
             _.speed = 30;
 
+            // Reset the score
+            this.score.set(0);
+
             // Get a new tetriminos
             this.triggerNextPiece();
 
