@@ -527,7 +527,7 @@
                        !this.canMoveTo(potentialOffsetX, potentialOffsetY, _.currentPiece.blocks)
                     )
                     {
-                        this.landCurrentPiece();
+                        this.landCurrentPiece(_.currentPiece.offsetX, _.currentPiece.offsetY);
                         this.clearFullLines();
                         this.triggerNextPiece();
                     }
@@ -541,6 +541,23 @@
                 default:
                     return;
             }
+        },
+
+        // Drop the current piece to the lowest point
+        dropCurrentPiece: function() {
+
+            for (var y = _.currentPiece.offsetY; y < ROWS; y++)
+            {
+
+                if(!this.canMoveTo(_.currentPiece.offsetX, y, _.currentPiece.blocks))
+                {
+                    this.landCurrentPiece(_.currentPiece.offsetX, y-1);
+                    this.clearFullLines();
+                    this.triggerNextPiece();
+                    break;
+                }
+            }
+
         },
 
         // Trigger the next piece
@@ -623,6 +640,9 @@
                 {
                     if (blocks[x][y] == 0) continue;
 
+                    // If outside of the gameboard
+                    if ((y + offsetY) >= ROWS) return false;
+
                     // Block is already taken
                     if (_.board[y + offsetY][x + offsetX] != COLORS.EMPTY) return false;
                 }
@@ -631,7 +651,10 @@
         },
 
         // Land the current tetriminos to the board
-        landCurrentPiece: function() {
+        landCurrentPiece: function(offsetX, offsetY) {
+
+            _.currentPiece.offsetY = offsetY;
+            _.currentPiece.offsetX = offsetX;
 
             for (var y = 0; y < _.currentPiece.blocks.length; y++)
             {
@@ -746,7 +769,7 @@
             });
 
             this.addKeyController([KEY.SPACE], 10, function() {
-                // @TODO Drop the current tetriminos
+                game.dropCurrentPiece();
             });
 
         },
