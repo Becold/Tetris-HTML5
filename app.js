@@ -49,7 +49,12 @@
         ESCAPE: 27,
         SPACE: 32,
 
-        P: 80
+        P: 80,
+
+        Z: 90,
+        Q: 81,
+        S: 83,
+        D: 68
     }
 
     // Possible game state
@@ -752,19 +757,19 @@
                 game.togglePause();
             });
 
-            this.addKeyController([KEY.LEFT], 10, function() {
+            this.addKeyController([KEY.LEFT, KEY.Q], 10, function() {
                 game.moveCurrentPiece(DIR.LEFT);
             });
 
-            this.addKeyController([KEY.RIGHT], 10, function() {
+            this.addKeyController([KEY.RIGHT, KEY.D], 10, function() {
                 game.moveCurrentPiece(DIR.RIGHT);
             });
 
-            this.addKeyController([KEY.DOWN], 7, function() {
+            this.addKeyController([KEY.DOWN, KEY.S], 7, function() {
                 game.moveCurrentPiece(DIR.DOWN);
             });
 
-            this.addKeyController([KEY.UP], 10, function() {
+            this.addKeyController([KEY.UP, KEY.Z], 10, function() {
                 game.rotateCurrentPiece();
             });
 
